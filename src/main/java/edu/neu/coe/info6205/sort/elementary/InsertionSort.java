@@ -70,9 +70,7 @@ public class InsertionSort<X extends Comparable<X>> extends SortWithHelper<X> {
         }
         }
         // FIXME
-        // END 
-
-
+        // END
     public static final String DESCRIPTION = "Insertion sort";
 
     public static <T extends Comparable<T>> void sort(T[] ts) {

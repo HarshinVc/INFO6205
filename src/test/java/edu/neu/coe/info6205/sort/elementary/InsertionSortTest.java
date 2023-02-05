@@ -12,8 +12,7 @@ import edu.neu.coe.info6205.util.StatPack;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -140,5 +139,80 @@ public class InsertionSortTest {
     }
 
     final static LazyLogger logger = new LazyLogger(InsertionSort.class);
+    @Test
+    public void Random() throws Exception {
+        System.out.println(" Random");
+        //int[] n = {250, 500, 1000, 2000, 4000};
+        int n = 250;
+        for(n=250;n<=8000;n=n*2) {
+            Integer[] xs = RandomizeArray(n);
+            int runs = 1000;
+            long randomTime = Benchmark_run(runs, n, xs);
+            System.out.println("Time taken on average to sort Random array of size " + n + " is " + randomTime + " on runs " + runs);
+        }
+    }
+    @Test
+    public void Ordered() throws Exception {
+        System.out.println(" Ordered Array");
+        int n = 250;
+        for(n=250;n<=8000;n=n*2) {
+            Integer[] xs = RandomizeArray(n);
+            Arrays.sort(xs);
+            int runs = 100;
+            long orderedTime = Benchmark_run(runs, n, xs);
+            System.out.println("Time taken on average to sort Ordered array " + n + "  is " + orderedTime + " on runs " + runs);
+        }
+    }
+    @Test
+    public void ReverseOrdered() throws Exception {
+        System.out.println("Reverse Ordered");
+        int n = 250;
+        for(n=250;n<=8000;n=n*2) {
+            Integer[] xs = RandomizeArray(n);
+            Arrays.sort(xs);
+            Collections.reverse(Arrays.asList(xs));
+            int runs = 100;
+            long reverseOrderedTime = Benchmark_run(runs, n, xs);
+            System.out.println("Time taken on average to sort Reverse Ordered array " + n + "  is " + reverseOrderedTime + " on runs " + runs);
+        }
+    }
+    @Test
+    public void PartialOrdered() throws Exception {
+        System.out.println("Partial Ordered");
+        int n = 250;
+        for(n=250;n<=8000;n=n*2) {
+            Integer[] xs = RandomizeArray(n);
+            //Sort Partially
+            Arrays.sort(xs, 0, (4 * n) / 10);
+            int runs = 1000;
+            long partialOrderedTime = Benchmark_run(runs, n, xs);
+            System.out.println("Time taken on average to sort Partial Ordered array  " + n + "  is " + partialOrderedTime + " on runs " + runs);
+        }
+    }
+    public Integer[] RandomizeArray(int n){
+        Random rand = new Random();
+        Integer[] xs = new Integer[n];
+        for (int i = 0; i < n; i++){
+            xs[i] = rand.nextInt(n);
+//            System.out.print(xs[i] + " ");
+        }
+        return xs;
+    }
+    public long Benchmark_run(int runs,int n, Integer[] xs){
+        Integer[] copy = Arrays.copyOf(xs, n);
+        int t = runs;
+        long time = 0;
+        InsertionSort is = new InsertionSort();
+        while (t-- != 0){
+            long startTime = System.nanoTime();
+            is.sort(copy,0,n);
+            long endtime = System.nanoTime();
+            time += (endtime - startTime);
+//            System.out.print("Time: " + time);
+            copy = Arrays.copyOf(xs, n);
+        }
+        time = time/runs;
+        return time;
+    }
 
 }
