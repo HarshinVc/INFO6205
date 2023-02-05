@@ -18,6 +18,10 @@ public class InsertionSortBasic {
 
     private void swap(int i, Object[] a) {
         // FIXME
+
+        Object temp = a[i];
+        a[i] = a[i + 1];
+        a[i + 1] = temp;
         // END 
     }
 

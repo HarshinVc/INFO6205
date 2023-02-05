@@ -56,8 +56,27 @@ public class Timer {
      */
     public <T, U> double repeat(int n, Supplier<T> supplier, Function<T, U> function, UnaryOperator<T> preFunction, Consumer<U> postFunction) {
         logger.trace("repeat: with " + n + " runs");
+        pause();
         // FIXME: note that the timer is running when this method is called and should still be running when it returns. by replacing the following code
-         return 0;
+        double tTime = 0;
+        for (int i = 1; i <= n; i++) {
+            T inputValue = supplier.get();
+            if (preFunction != null) {
+                inputValue = preFunction.apply(inputValue);
+            }
+            resume();
+            long startTime = System.nanoTime();
+            U result = function.apply(inputValue);
+            long endTime = System.nanoTime();
+            tTime += (endTime - startTime) / 1_000_000.0;
+            pauseAndLap();
+            if (postFunction != null) {
+                postFunction.accept(result);
+            }
+        }
+        resume();
+        return tTime / n;
+         //return 0;
         // END 
     }
 
@@ -177,8 +196,9 @@ public class Timer {
      */
     private static long getClock() {
         // FIXME by replacing the following code
-         return 0;
-        // END 
+        return System.nanoTime();
+         //return 0;
+        // END
     }
 
     /**
@@ -190,7 +210,8 @@ public class Timer {
      */
     private static double toMillisecs(long ticks) {
         // FIXME by replacing the following code
-         return 0;
+         //return 0;
+        return (double) ticks / 1000000;
         // END 
     }
 
