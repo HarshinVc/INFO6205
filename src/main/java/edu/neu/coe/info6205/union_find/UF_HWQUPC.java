@@ -8,6 +8,7 @@
 package edu.neu.coe.info6205.union_find;
 
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * Height-weighted Quick Union with Path Compression
@@ -182,7 +183,7 @@ public class UF_HWQUPC implements UF {
             parent[j] = i;
             height[i]++;
         }
-        count--;
+        //count--;
     }
 
     /**
@@ -191,12 +192,36 @@ public class UF_HWQUPC implements UF {
     private void doPathCompression(int i) {
         // FIXME update parent to value of grandparent
         // END
-
         int root=i;
         while(parent[root]!=root) {
         root = parent[root];
         }
         parent[i]=root;
+    }
+
+    public static int count(int n) {
+        Random random = new Random();
+        UF_HWQUPC uf = new UF_HWQUPC(n);
+        int m =0;
+        int p=0,q = 0;
+        while (uf.count > 1) {
+            p = random.nextInt(n);
+            q = random.nextInt(n);
+            m++;
+            if (!uf.connected(p, q)) {
+                uf.union(p, q);
+            }
+        }
+        return m;
+    }
+
+    public static void main(String[] args) {
+        int n;
+        for (n=50;n<6500;n=n*2)
+        {
+        int m = count(n);
+        System.out.println("Number of pairs: " + m+" For the Objects :"+n);
+    }
     }
 }
 
